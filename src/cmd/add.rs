@@ -7,14 +7,18 @@ use serde_json::json;
 
 /// Construct an add gateway transaction for this gateway.
 #[derive(Debug, clap::Args)]
-pub struct Cmd {}
+pub struct Cmd {
+    /// The owner to use in the generated add transaction. This is a helium
+    /// public key in string form.
+    owner: helium_crypto::PublicKey,
+}
 
 impl Cmd {
     pub fn run(&self, device: &Device) -> anyhow::Result<()> {
         let keypair = device.get_keypair(false)?;
         let mut txn = BlockchainTxnAddGatewayV1 {
             gateway: keypair.public_key().to_vec(),
-            owner: vec![],
+            owner: self.owner.to_vec(),
             payer: vec![],
             fee: 0,
             staking_fee: 0,

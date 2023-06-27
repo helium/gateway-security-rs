@@ -2,7 +2,7 @@ use crate::cmd::print_json;
 use gateway_onboarding_rs::device::Device;
 use serde_json::json;
 
-/// Construct an add gateway transaction for this gateway.
+/// Return information about the security device for this gateway.
 #[derive(Debug, clap::Args)]
 pub struct Cmd {}
 

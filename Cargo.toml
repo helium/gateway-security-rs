@@ -3,6 +3,10 @@ name = "gateway-onboarding-rs"
 version = "0.1.0"
 edition = "2021"
 
+[[bin]]
+name = "gateway-onboarding-tx"
+path = "src/main.rs"
+
 [dependencies]
 helium-crypto = "0.6"
 clap = {version = "4", default-features=false, features = ["derive", "help", "std", "error-context"]}
