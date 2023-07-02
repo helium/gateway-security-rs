@@ -1,5 +1,5 @@
 use clap::Parser;
-use gateway_onboarding_rs::device::Device;
+use gateway_security_rs::device::Device;
 
 mod cmd;
 
