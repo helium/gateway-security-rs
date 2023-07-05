@@ -22,3 +22,6 @@ serde_json = "1"
 
 [features]
 nova-tz = [ "helium-crypto/nova-tz" ]
+
+[package.metadata.cross.build]
+pre-build = ["apt-get install -y protobuf-compiler"]
