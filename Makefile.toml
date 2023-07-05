@@ -1,0 +1,33 @@
+[env]
+CROSS_TARGET = "${CARGO_MAKE_PROFILE}"
+FEATURES = "ecc608"
+BUILD_COMMAND = "cross"
+TAR = { source = "${CARGO_MAKE_RUST_TARGET_OS}", default_value = "linux", mapping = {"macos" = "gtar", "linux" = "tar" } }
+
+[env.armv7-nova-linux-musleabihf]
+CROSS_TARGET = "armv7-unknown-linux-musleabihf"
+FEATURES = "nova-tz"
+
+[tasks.build]
+description = "Runs the cross/cargo rust compiler."
+condition = { env_set = ["CROSS_TARGET", "BUILD_COMMAND", "FEATURES"] }
+command = "${BUILD_COMMAND}"
+args = [
+  "build",
+  "--target",
+  "${CROSS_TARGET}",
+  "--features",
+  "${FEATURES}",
+  "--release"
+]
+
+[tasks.pkg]
+description = "Package application"
+workspace = false
+condition = { env_set = ["CARGO_MAKE_PROFILE", "CROSS_TARGET"]}
+env = { PKG_NAME = "gateway-onboarding-v${CARGO_MAKE_CRATE_VERSION}-${CARGO_MAKE_PROFILE}" }
+script = '''
+  ${TAR} -zcv -C target/${CROSS_TARGET}/release -f ${PKG_NAME}.tar.gz gateway-onboarding-tx
+  sha256sum --tag ${PKG_NAME}.tar.gz > ${PKG_NAME}.checksum
+'''
+

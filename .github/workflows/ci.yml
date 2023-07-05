@@ -15,7 +15,7 @@ name: ci
 
 jobs:
   hygiene:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
 
     steps:
       - name: Setup | Cancel Previous Runs
@@ -32,7 +32,7 @@ jobs:
           components: clippy, rustfmt
 
       - name: Setup | Tools
-        run: sudo apt-get install -y protobuf-compiler libtss2-dev
+        run: sudo apt-get install -y protobuf-compiler
 
       - name: Setup | Cache
         uses: Swatinem/rust-cache@v2
@@ -45,3 +45,43 @@ jobs:
       - name: Build | Test
         run: |
           cargo test
+
+  package:
+    name: package
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        target:
+          - armv7-nova-linux-musleabihf
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: davidB/rust-cargo-make@v1
+      - uses: dtolnay/rust-toolchain@stable
+
+      - name: install cross
+        uses: jaxxstorm/action-install-gh-release@v1.9.0
+        env:
+          ## Allow cross install into PATH
+          ACTIONS_ALLOW_UNSECURE_COMMANDS: true
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          repo: rust-embedded/cross
+
+      - name: build target
+        run: cargo make --profile ${{ matrix.target }} build
+
+      - name: package release
+        if: startsWith(github.ref, 'refs/tags')
+        run: cargo make --profile ${{ matrix.target }} pkg
+
+      - name: push release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          fail_on_unmatched_files: true
+          files: |
+            gateway-onboarding-*.tar.gz
+            gateway-onboarding-*.checksum
