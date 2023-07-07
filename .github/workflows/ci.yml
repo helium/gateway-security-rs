@@ -32,7 +32,7 @@ jobs:
           components: clippy, rustfmt
 
       - name: Setup | Tools
-        run: sudo apt-get install -y protobuf-compiler
+        run: sudo apt-get install -y protobuf-compiler libtss2-dev
 
       - name: Setup | Cache
         uses: Swatinem/rust-cache@v2

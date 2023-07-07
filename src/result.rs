@@ -12,6 +12,8 @@ pub enum Error {
     IO(#[from] std::io::Error),
     #[error("crypto error: {0}")]
     CryptoError(#[from] helium_crypto::Error),
+    #[error("keypair creation not supported")]
+    CreateNotSupported,
 }
 
 #[derive(Error, Debug)]
@@ -22,10 +24,12 @@ pub enum EncodeError {
 
 #[derive(Error, Debug)]
 pub enum DecodeError {
+    #[error("invalid url: \"{0}\"")]
+    InvalidUrl(#[from] http::uri::InvalidUri),
     #[error("invalid device url: \"{0}\"")]
-    IvalidDeviceUrl(#[from] http::uri::InvalidUri),
-    #[error("invalid device scheme: \"{0}\"")]
-    InvalidUriScheme(String),
+    InvalidDeviceUrl(String),
+    #[error("invalid device url argument: \"{0}\"")]
+    InvalidDeviceUrlArgument(String),
 }
 
 macro_rules! from_err {

@@ -1,5 +1,5 @@
 use crate::cmd::print_json;
-use gateway_security_rs::device::Device;
+use gateway_security::device::Device;
 use serde_json::json;
 
 /// Return information about the security device for this gateway.

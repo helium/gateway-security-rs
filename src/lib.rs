@@ -1,4 +1,4 @@
 pub mod device;
 pub mod result;
 
-pub use result::{Error, Result};
+pub use result::{DecodeError, EncodeError, Error, Result};

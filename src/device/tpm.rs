@@ -1,12 +1,12 @@
 use crate::{Error, Result};
-use helium_crypto::{nova_tz, Keypair, Network};
+use helium_crypto::{tpm, Keypair, Network};
 use http::Uri;
 use serde::Serialize;
 use std::path::PathBuf;
 
 #[derive(Debug, Clone)]
 pub struct Device {
-    /// TrustZone keyblob path
+    /// TPM key path
     pub path: PathBuf,
 }
 
@@ -16,8 +16,8 @@ pub struct Info {
 }
 
 impl Device {
-    /// Parses a trustzone device url of the form `nova-tz://rsa/<key_path>`,
-    /// where <key_path> is the path to TrustZone keyblob
+    /// Parses a tpm device url of the form `tpm://tpm/<key_path>`,
+    /// where <key_path> is the path to TPM KEY
     pub fn from_url(url: &Uri) -> Result<Self> {
         Ok(Self {
             path: url.path().into(),
@@ -34,7 +34,7 @@ impl Device {
         if create {
             return Err(Error::CreateNotSupported);
         }
-        let keypair = nova_tz::Keypair::from_key_path(Network::MainNet, &self.path)
+        let keypair = tpm::Keypair::from_key_path(Network::MainNet, &self.path.to_string_lossy())
             .map(helium_crypto::Keypair::from)?;
         Ok(keypair)
     }

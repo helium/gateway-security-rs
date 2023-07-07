@@ -1,3 +1,6 @@
+[build]
+pre-build = ["apt-get install -y protobuf-compiler"]
+
 [target.armv7-unknown-linux-gnueabihf.env]
 volumes = [
     "BUILD_DIR",
