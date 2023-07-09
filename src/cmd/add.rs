@@ -1,6 +1,6 @@
 use crate::cmd::print_json;
 use base64::{engine::general_purpose::STANDARD as B64, Engine};
-use gateway_security_rs::device::Device;
+use gateway_security::device::Device;
 use helium_crypto::Sign;
 use helium_proto::{BlockchainTxn, BlockchainTxnAddGatewayV1, Message, Txn};
 use serde_json::json;
