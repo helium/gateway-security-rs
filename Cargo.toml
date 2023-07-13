@@ -8,7 +8,7 @@ name = "gateway-onboarding-tx"
 path = "src/main.rs"
 
 [dependencies]
-helium-crypto = "0.7"
+helium-crypto = "0.7.3"
 clap = {version = "4", default-features=false, features = ["derive", "help", "std", "error-context"]}
 helium-proto = { git = "https://github.com/helium/proto", branch="master"}
 base64 = ">=0.21"

@@ -1,7 +1,6 @@
-use crate::cmd::print_json;
+use crate::{cmd::print_json, txn_sign::TxnSign};
 use base64::{engine::general_purpose::STANDARD as B64, Engine};
 use gateway_security_rs::device::Device;
-use helium_crypto::Sign;
 use helium_proto::{BlockchainTxn, BlockchainTxnAddGatewayV1, Message, Txn};
 use serde_json::json;
 
@@ -27,7 +26,7 @@ impl Cmd {
             payer_signature: vec![],
         };
 
-        txn.gateway_signature = keypair.sign(&txn.encode_to_vec())?;
+        txn.gateway_signature = txn.sign(&keypair)?;
 
         let add_gateway_txn = BlockchainTxn {
             txn: Some(Txn::AddGateway(txn)),
@@ -37,7 +36,7 @@ impl Cmd {
         let encoded_txn = B64.encode(add_gateway_txn);
         let json = json!({
             "address": keypair.public_key().to_string(),
-            "txn": B64.encode(encoded_txn),
+            "txn": encoded_txn,
         });
         print_json(&json)
     }

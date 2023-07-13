@@ -2,6 +2,7 @@ use clap::Parser;
 use gateway_security_rs::device::Device;
 
 mod cmd;
+mod txn_sign;
 
 #[derive(Debug, Parser)]
 #[command(version = env!("CARGO_PKG_VERSION"))]
@@ -29,6 +30,7 @@ pub struct Cli {
 pub enum Cmd {
     Info(cmd::info::Cmd),
     Add(cmd::add::Cmd),
+    Verify(cmd::verify::Cmd),
 }
 
 pub fn main() -> anyhow::Result<()> {
@@ -41,6 +43,7 @@ impl Cmd {
         match self {
             Self::Info(cmd) => cmd.run(device),
             Self::Add(cmd) => cmd.run(device),
+            Self::Verify(cmd) => cmd.run(device),
         }
     }
 }
