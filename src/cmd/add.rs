@@ -36,6 +36,7 @@ impl Cmd {
 
         let encoded_txn = B64.encode(add_gateway_txn);
         let json = json!({
+            "address": keypair.public_key().to_string(),
             "txn": B64.encode(encoded_txn),
         });
         print_json(&json)
